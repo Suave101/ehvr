@@ -554,45 +554,61 @@ const ViewRooms = () => {
                         const typeName = room.room_types?.name;
                         const typeDetails = typeName ? roomTypeDetails[typeName] : null;
                         const imageLeft = idx % 2 === 0;
+                        // Badge color logic based on price
+                        let badgeColor = 'bg-info text-dark';
+                        let highlightLuxury = false;
+                        if (typeDetails && typeof typeDetails.base_price_per_night === 'number') {
+                            if (typeDetails.base_price_per_night >= 400) {
+                                badgeColor = 'bg-warning text-dark'; // Gold/expensive
+                                highlightLuxury = true;
+                            } else if (typeDetails.base_price_per_night >= 250) {
+                                badgeColor = 'bg-primary text-light'; // Mid/high
+                            } else if (typeDetails.base_price_per_night >= 150) {
+                                badgeColor = 'bg-success text-light'; // Mid
+                            } else {
+                                badgeColor = 'bg-secondary text-light'; // Budget
+                            }
+                        }
                         return (
                             <li
                                 key={room.id}
-                                className="mb-5 additional-accommodations-card"
+                                className={`mb-5 additional-accommodations-card${highlightLuxury ? ' luxury-gradient-border' : ''}`}
                                 style={{
-                                    border: "none",
-                                    borderRadius: "32px",
-                                    background: room.is_active ? "rgba(255,255,255,0.98)" : "#f8d7da",
-                                    cursor: room.is_active ? "pointer" : "not-allowed",
+                                    border: highlightLuxury ? '2.5px solid #ff9800' : 'none',
+                                    borderRadius: '32px',
+                                    background: room.is_active ? 'rgba(255,255,255,0.98)' : '#f8d7da',
+                                    cursor: room.is_active ? 'pointer' : 'not-allowed',
                                     opacity: room.is_active ? 1 : 0.6,
-                                    display: "flex",
-                                    flexDirection: imageLeft ? "row" : "row-reverse",
-                                    alignItems: "stretch",
-                                    overflow: "hidden",
+                                    display: 'flex',
+                                    flexDirection: imageLeft ? 'row' : 'row-reverse',
+                                    alignItems: 'stretch',
+                                    overflow: 'hidden',
                                     minHeight: 260,
-                                    boxShadow: "0 8px 32px rgba(13,110,253,0.10), 0 2px 8px rgba(0,0,0,0.04)",
-                                    position: "relative",
-                                    transition: "box-shadow 0.2s, transform 0.2s",
-                                    marginBottom: 40
+                                    boxShadow: '0 8px 32px rgba(13,110,253,0.10), 0 2px 8px rgba(0,0,0,0.04)',
+                                    position: 'relative',
+                                    transition: 'box-shadow 0.2s, transform 0.2s',
+                                    marginBottom: 40,
+                                    backgroundImage: highlightLuxury ? 'linear-gradient(90deg,#ffecb3 0%,#ffd600 100%)' : undefined,
                                 }}
                                 onClick={() => room.is_active && handleRoomClick(room)}
                             >
                                 <img
                                     src={getRoomImage(room)}
-                                    alt={typeName ?? "Room"}
+                                    alt={typeName ?? 'Room'}
                                     className="additional-accommodations-img"
                                     style={{
                                         width: 340,
                                         height: 240,
-                                        objectFit: "cover",
-                                        borderRadius: imageLeft ? "32px 0 120px 32px" : "0 32px 32px 120px",
+                                        objectFit: 'cover',
+                                        borderRadius: imageLeft ? '32px 0 120px 32px' : '0 32px 32px 120px',
                                         marginLeft: imageLeft ? 0 : 0,
-                                        marginRight: imageLeft ? "2.5rem" : 0,
-                                        marginLeft: !imageLeft ? "2.5rem" : 0,
+                                        marginRight: imageLeft ? '2.5rem' : 0,
+                                        marginLeft: !imageLeft ? '2.5rem' : 0,
                                         boxShadow: imageLeft
-                                            ? "12px 0 32px rgba(13,110,253,0.13)"
-                                            : "-12px 0 32px rgba(13,110,253,0.13)",
-                                        transition: "transform 0.2s",
-                                        transform: room.is_active ? "scale(1.06) rotate(-2deg)" : "scale(1)"
+                                            ? '12px 0 32px rgba(13,110,253,0.13)'
+                                            : '-12px 0 32px rgba(13,110,253,0.13)',
+                                        transition: 'transform 0.2s',
+                                        transform: room.is_active ? 'scale(1.06) rotate(-2deg)' : 'scale(1)'
                                     }}
                                 />
                                 <div className="p-4 d-flex flex-column justify-content-center additional-accommodations-body" style={{ flex: 1, minWidth: 0 }}>
@@ -601,9 +617,9 @@ const ViewRooms = () => {
                                             className="mb-0"
                                             style={{
                                                 fontFamily: "'Roboto Slab', serif",
-                                                fontSize: "1.7rem",
+                                                fontSize: '1.7rem',
                                                 fontWeight: 800,
-                                                color: "#0d6efd",
+                                                color: highlightLuxury ? '#ff9800' : '#0d6efd',
                                                 letterSpacing: 0.5,
                                                 wordBreak: 'break-word',
                                                 flex: 1
@@ -611,7 +627,7 @@ const ViewRooms = () => {
                                         >
                                             Room {room.room_number}
                                         </h3>
-                                        <span className="badge bg-info text-dark ms-3" style={{ fontSize: 16 }}>{typeName ?? "Unknown Type"}</span>
+                                        <span className={`badge ${badgeColor} ms-3`} style={{ fontSize: 16 }}>{typeName ?? 'Unknown Type'}</span>
                                         {!room.is_active && (
                                             <span className="badge bg-danger ms-2" style={{ fontSize: 16 }}>Not Available</span>
                                         )}
@@ -686,6 +702,10 @@ const ViewRooms = () => {
                     margin-bottom: 1.5rem !important;
                     border-radius: 16px !important;
                     box-shadow: 0 2px 8px rgba(13,110,253,0.10), 0 1px 4px rgba(0,0,0,0.04) !important;
+                  }
+                  .luxury-gradient-border {
+                    border: 2.5px solid #ff9800 !important;
+                    background-image: linear-gradient(90deg,#ffecb3 0%,#ffd600 100%) !important;
                   }
                   .additional-accommodations-img {
                     width: 100% !important;

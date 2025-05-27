@@ -1,0 +1,14 @@
+# Paginate View Rooms Paginate
+# Lazy Load Rooms
+# Create Details Page
+# Create Payment Page
+# Create Dining Page
+# Create Meetings Page
+# Create Gallery Page
+# Add Phone Capability
+# Make Book Now button in the header work
+# Add Admin Page
+# Add Front Desk Page
+# Add Cleaning Lady Page (Add Espanol Option)
+# Add Maintenance Page
+# Develop Check-In Kiosk
