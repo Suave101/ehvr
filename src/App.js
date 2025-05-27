@@ -12,10 +12,12 @@ import SearchBar from "./components/SearchBar"; // <-- Import the new SearchBar
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<FrontPage />} />
-        <Route path="/rooms" element={<ViewRooms />} />
-      </Routes>
+      <div style={{ background: "linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%)", minHeight: "100vh" }}>
+        <Routes>
+          <Route path="/" element={<FrontPage />} />
+          <Route path="/rooms" element={<ViewRooms />} />
+        </Routes>
+      </div>
     </Router>
   );
 }
@@ -81,8 +83,8 @@ function FrontPage() {
           <span className="carousel-control-next-icon" aria-hidden="true"></span>
           <span className="visually-hidden">Next</span>
         </button>
-        {/* SearchBar absolutely positioned inside carousel */}
-        <div
+        {/* SearchBar absolutely positioned inside carousel for desktop only */}
+        <div className="d-none d-md-block"
           style={{
             position: "absolute",
             left: 0,
@@ -102,6 +104,16 @@ function FrontPage() {
         >
           <div className="container-fluid py-3">
             <SearchBar />
+          </div>
+        </div>
+      </div>
+      {/* SearchBar below carousel on mobile only */}
+      <div className="d-block d-md-none w-100" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.65) 40%, rgba(255,255,255,0.85) 100%)", boxShadow: "0 4px 24px rgba(0,0,0,0.08)" }}>
+        <div className="container-fluid py-3" style={{ background: "#d0dbed" }}>
+          <div className="card shadow-lg border-0" style={{ borderRadius: 18 }}>
+            <div className="card-body p-3">
+              <SearchBar />
+            </div>
           </div>
         </div>
       </div>
