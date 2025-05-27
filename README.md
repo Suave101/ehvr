@@ -1,4 +1,74 @@
-# Core Functionality & Guest Experience
+# Ocean Island Beach Resorts
+
+### [Click Here to visit the live preview](https://ehvr.vercel.app/)
+
+![main](https://github.com/user-attachments/assets/21d140ad-8cbb-417b-ae54-6e1f6622af84)
+> Here is a screenshot of the Front Page of the Website
+
+![image](https://github.com/user-attachments/assets/d605f3ff-928b-40f1-ba1b-5481d999efaa)
+> Here is a screenshot of the Featured Accomodations part of the Accomodations Page
+
+![image](https://github.com/user-attachments/assets/9fb15635-7a8b-4ff0-80cd-3018db7b2ddc)
+> Here is a screenshot of the Additional Acommodations part of the Accomodations Page
+
+![image](https://github.com/user-attachments/assets/17d88217-5c52-438e-bd99-3e1bae568de1)
+> For sales purposes, suites and higher tiered rooms are highlighted gold
+
+# Application Schema
+![image](https://github.com/user-attachments/assets/43160d15-fa79-4a16-838c-9690b9c75748)
+
+> This report outlines the proposed database structure for our hotel room booking system, designed to serve as the robust foundation for managing our properties, room inventory, and guest reservations. It's built to ensure efficiency, accuracy, and scalability, directly impacting our operational effectiveness and guest satisfaction.
+
+### Understanding Our Data Foundation
+
+At its core, this system organizes all critical information about our hotel operations into distinct, interconnected components. Think of it as the central nervous system that allows us to manage everything from individual rooms to complex booking schedules.
+
+**Here are the key components and their business significance:**
+
+1.  **Hotels (`hotels` table):**
+    * **Business Purpose:** This is our master list of all hotel properties we operate, such as the Amara, Bonita, and Cordova Hotels. It holds essential details like each hotel's name, address, and a general description.
+    * **Value to Business:** Provides a clear, centralized record of our assets, enabling consistent management across all locations.
+
+2.  **Room Categories (`room_types` table):**
+    * **Business Purpose:** This defines the various types of rooms we offer (e.g., 'Oceanfront King', 'Deluxe Double Queen'). It standardizes details like base pricing, maximum occupancy, and amenities for each category.
+    * **Value to Business:** Ensures consistent pricing and service levels for similar rooms, simplifies rate management, and helps us market specific room features effectively.
+
+3.  **Individual Rooms (`rooms` table):**
+    * **Business Purpose:** This is our precise inventory of every single physical room in our hotels (e.g., "Room 101," "Suite A"). Each room is linked to its specific category and can be marked as active or inactive.
+    * **Value to Business:** Provides real-time, granular control over our exact room inventory, essential for accurate availability and preventing overbooking.
+
+4.  **Guest Bookings (`reservations` table):**
+    * **Business Purpose:** This is where we record every guest's booking. It captures who booked, for which room, check-in and check-out dates, total price, number of guests, and the current status of their reservation (e.g., confirmed, pending, cancelled).
+    * **Value to Business:** Serves as the core record for all guest stays, enabling efficient check-in/out, billing, and guest communication.
+
+5.  **Operational Blockouts (`room_blockout_dates` table):**
+    * **Business Purpose:** This is a critical feature for managing non-bookable periods for individual rooms. It allows us to mark specific dates when a room is unavailable for reasons like maintenance, renovation, or special owner use, completely separate from guest bookings.
+    * **Value to Business:** Prevents accidental bookings of unavailable rooms, streamlines maintenance scheduling, and ensures operational efficiency by clearly defining room status.
+
+### How We Ensure Room Availability (The Core Logic)
+
+A key strength of this database structure is its intelligent approach to determining room availability. When a potential guest searches for a room for specific dates, the system performs a rapid check:
+
+* It confirms the room is marked as **active** in our inventory.
+* It verifies there are **no existing guest reservations** that overlap with the requested dates.
+* Crucially, it checks that there are **no planned operational blockouts** for that specific room within the desired period.
+
+This integrated approach ensures that we only offer rooms that are genuinely available, preventing frustrating overbookings and maintaining guest satisfaction.
+
+### Strategic Business Benefits
+
+This database schema provides several significant advantages for our hotel operations:
+
+* **Enhanced Operational Efficiency:** Streamlines the entire booking process, from inventory management to guest check-in, reducing manual errors and staff workload.
+* **Optimized Revenue:** Accurate, real-time availability data allows us to maximize occupancy and enables future implementation of dynamic pricing strategies based on demand.
+* **Superior Guest Experience:** Guests can book with confidence, knowing their chosen room will be available and ready, leading to higher satisfaction and repeat business.
+* **Robust Data Integrity:** The structured design minimizes data inconsistencies, providing a reliable source of truth for all hotel operations and reporting.
+* **Scalability for Growth:** This flexible foundation is designed to easily accommodate future expansion, whether we add more rooms, new room types, or even additional hotel properties.
+
+In essence, this database schema is more than just a technical blueprint; it's a strategic asset that underpins our ability to operate efficiently, serve our guests effectively, and drive business growth.
+# Planned Features
+
+## Core Functionality & Guest Experience
 
 ---
 
@@ -34,7 +104,7 @@ Ensure the main call-to-action button initiates the booking process or opens the
 
 ---
 
-# Internal Operations & Staff Management
+## Internal Operations & Staff Management
 
 ---
 
@@ -55,7 +125,7 @@ Self-service solution for guest check-in/out, room selection, digital keys, and 
 
 ---
 
-# Advanced Business Intelligence & Management
+## Advanced Business Intelligence & Management
 
 ---
 
