@@ -1,70 +1,159 @@
-# Getting Started with Create React App
+# Core Functionality & Guest Experience
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+---
 
-## Available Scripts
+### Paginate View Rooms
+Display available rooms in manageable pages for better performance and easier browsing.
 
-In the project directory, you can run:
+### Lazy Load Rooms
+Optimize loading times by only loading images and details as they enter the user's viewport.
 
-### `npm start`
+### Put Real Rooms Into System
+Populate the database with actual hotel room inventory, including unique numbers, types, and statuses.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Create Details Page
+Provide a dedicated page for each room or room type, featuring high-res images, amenities, pricing, and a clear booking call-to-action.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Create Payment Page
+Securely process guest payments with robust integration to payment gateways, handling all transaction steps and errors.
 
-### `npm test`
+### Create Dining Page
+Showcase hotel dining options, menus, hours, and promotions to encourage on-site dining.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Create Meetings Page
+Highlight meeting and event spaces, with details on capacity, equipment, catering, and booking inquiries.
 
-### `npm run build`
+### Create Gallery Page
+A visually engaging gallery of rooms, amenities, and local attractions, using high-quality photos and videos.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Add Phone Capability
+Integrate click-to-call and/or softphone features for guest and staff communication.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Make Book Now Button in Header Work
+Ensure the main call-to-action button initiates the booking process or opens the booking form.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+# Internal Operations & Staff Management
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Add Admin Page
+Central control panel for managing users, rooms, pricing, reservations, and system settings.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Add Front Desk Page
+Specialized interface for check-ins/outs, room assignments, payments, and guest inquiries.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Add Cleaning Lady Page (Add Español Option)
+Housekeeping dashboard for room assignments, cleaning status, and maintenance reporting, with Spanish language support.
 
-## Learn More
+### Add Maintenance Page
+Manage repair requests, routine tasks, and maintenance status updates for all rooms.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Develop Check-In Kiosk
+Self-service solution for guest check-in/out, room selection, digital keys, and payments.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+# Advanced Business Intelligence & Management
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+### Implement Business Logic to Analyze Trends and Recommend Rates
+Use analytics to optimize pricing based on demand, events, and competitor rates.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Integrate Calendar for Room Availability
+Visual calendar for real-time room availability, bookings, and assignments.
 
-### Making a Progressive Web App
+### Add User Role Management
+Define and assign user roles (Admin, Front Desk, Housekeeping, Guest) with specific permissions.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Implement Notification System (Email/SMS)
+Automate guest and staff alerts for bookings, reminders, and urgent messages.
 
-### Advanced Configuration
+### Add Reporting and Analytics Dashboard
+Centralized dashboard for KPIs: occupancy, revenue, sources, demographics, and efficiency.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Enable Full Multi-language Support
+Allow users to select their preferred language for the entire interface.
 
-### Deployment
+### Improve Accessibility (WCAG Compliance)
+Ensure usability for people with disabilities: keyboard navigation, screen reader support, and color contrast.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Add Dark Mode Option
+Allow users to switch to a dark color scheme for comfort and battery savings.
 
-### `npm run build` fails to minify
+### Implement Two-Factor Authentication
+Enhance security with two-step login (password + code).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Integrate Payment Gateways
+Connect to Stripe, PayPal, etc., for secure, global payment processing.
+
+### Add API for Third-Party Integrations
+Enable OTAs (Booking.com, Expedia) to sync availability, rates, and bookings.
+
+### Enable Real-Time Chat Support
+Live chat widget for instant guest support and engagement.
+
+### Add Feedback and Review System
+Collect guest feedback and ratings for continuous improvement.
+
+### Optimize for Mobile Devices
+Ensure a fully responsive, touch-friendly experience on all devices.
+
+### Implement Backup and Restore Functionality
+Regularly back up data and provide restore options for business continuity.
+
+### Add Audit Log for User Actions
+Track all significant user actions for security and troubleshooting.
+
+### Add Customizable Email Templates
+Allow staff to create and personalize branded email communications.
+
+### Integrate with Accounting Software
+Automate financial data transfer to platforms like QuickBooks or Xero.
+
+### Add Automated Invoice Generation
+Automatically generate and send invoices for guest payments.
+
+### Enable Push Notifications (Web/Mobile)
+Send real-time alerts to staff and guests on any device.
+
+### Implement Single Sign-On (SSO) Support
+Allow users to access multiple systems with one set of credentials.
+
+### Add Loyalty/Rewards Program Management
+Manage guest loyalty programs, points, tiers, and personalized offers.
+
+### Integrate Digital Key/Card System
+Enable smartphone or key card access to rooms, integrated with the front desk.
+
+### Add Guest Self-Service Portal
+Let guests manage bookings, check-in, view bills, and interact with services online.
+
+### Add Multi-Property Management Support
+Manage multiple hotels or properties from a single dashboard.
+
+### Integrate with IoT Devices (Smart Locks, Thermostats)
+Connect to smart devices for remote control and enhanced guest experience.
+
+### Enable Bulk Data Import/Export
+Easily import/export large datasets for migration or analysis.
+
+### Add Custom Report Builder
+Allow users to design and generate specialized reports.
+
+### Implement GDPR/CCPA Compliance Tools
+Support data privacy regulations with consent management and data requests.
+
+### Add Custom Branding/Theming Options
+Customize the system's appearance to match hotel branding.
+
+### Integrate with Social Media Platforms
+Automate promotions, share reviews, and enable direct bookings from social media.
+
+### Add Staff Scheduling and Shift Management
+Create and manage staff schedules, shifts, and time-off requests.
+
+### Implement Escalation Workflows for Issues
+Automate escalation of unresolved issues to management for timely resolution.
