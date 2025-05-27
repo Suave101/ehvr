@@ -3,13 +3,18 @@ import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import ViewRooms from "./pages/ViewRooms";
+import supabase from './utils/supabaseClient';
 
 function App() {
   return (
-    <Router>
-      <FrontPage />
-    </Router>
+  <Router>
+    <Routes>
+      <Route path="/" element={<FrontPage />} />
+      <Route path="/rooms" element={<ViewRooms />} />
+    </Routes>
+  </Router>
   );
 }
 
@@ -32,93 +37,101 @@ function SearchBar({ onSearch }) {
   const [arrival, setArrival] = React.useState("");
   const [departure, setDeparture] = React.useState("");
 
-  // Returns available rooms based on search criteria using the described schema
-  const getAvailableRooms = async ({ building, guests, arrival, departure }) => {
-    if (!arrival || !departure) return [];
-
-    const { createClient } = await import('@supabase/supabase-js');
-    const supabaseUrl = 'https://your-project.supabase.co';
-    const supabaseKey = 'public-anon-key';
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
-    // 1. Find hotel by name (building)
-    let hotelQuery = supabase.from('hotels').select('id').ilike('name', `%${building}%`);
-    const { data: hotels, error: hotelError } = await hotelQuery;
-    if (hotelError || !hotels || hotels.length === 0) return [];
-
-    const hotelId = hotels[0].id;
-
-    // 2. Find room_types that fit guest count
-    let roomTypeQuery = supabase
-      .from('room_types')
-      .select('id')
-      .eq('hotel_id', hotelId)
-      .gte('max_occupancy', guests);
-    const { data: roomTypes, error: roomTypeError } = await roomTypeQuery;
-    if (roomTypeError || !roomTypes || roomTypes.length === 0) return [];
-
-    const roomTypeIds = roomTypes.map(rt => rt.id);
-
-    // 3. Find active rooms of those types
-    let roomQuery = supabase
-      .from('rooms')
-      .select('id, room_number')
-      .eq('hotel_id', hotelId)
-      .in('room_type_id', roomTypeIds)
-      .eq('is_active', true);
-    const { data: rooms, error: roomError } = await roomQuery;
-    if (roomError || !rooms || rooms.length === 0) return [];
-
-    const roomIds = rooms.map(r => r.id);
-
-    // 4. Find rooms with overlapping reservations
-    let reservationQuery = supabase
-      .from('reservations')
-      .select('room_id')
-      .in('room_id', roomIds)
-      .or(
-        `and(check_in_date,lt.${departure},check_out_date,gt.${arrival})`
-      );
-    const { data: reservations } = await reservationQuery;
-    const reservedRoomIds = reservations ? reservations.map(r => r.room_id) : [];
-
-    // 5. Find rooms with blockout dates in range
-    let blockoutQuery = supabase
-      .from('room_blockout_dates')
-      .select('room_id')
-      .in('room_id', roomIds)
-      .gte('block_date', arrival)
-      .lt('block_date', departure);
-    const { data: blockouts } = await blockoutQuery;
-    const blockedRoomIds = blockouts ? blockouts.map(b => b.room_id) : [];
-
-    // 6. Filter out reserved and blocked rooms
-    const unavailableRoomIds = new Set([...reservedRoomIds, ...blockedRoomIds]);
-    const availableRooms = rooms.filter(r => !unavailableRoomIds.has(r.id));
-
-    return availableRooms;
-  };
+  const navigate = useNavigate();
 
   const handleSearch = async () => {
-    // Example Supabase query (adjust table/column names as needed)
-    const { createClient } = await import('@supabase/supabase-js');
-    const supabaseUrl = 'https://your-project.supabase.co';
-    const supabaseKey = 'public-anon-key';
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    let hotelId = null;
 
-    let query = supabase
-      .from('buildings')
-      .select('*')
-      .ilike('name', `%${building}%`)
-      .gte('max_guests', guests);
-
-    if (arrival) query = query.gte('available_from', arrival);
-    if (departure) query = query.lte('available_to', departure);
-
-    const { data, error } = await query;
-    if (onSearch) {
-      onSearch({ building, guests, arrival, departure, data, error });
+    // Handle "All Building" option
+    // If building is "*" or empty, do not filter by hotel_id
+    if (building && building !== "*") {
+      const { data: hotelData, error: hotelError } = await supabase
+        .from('hotels')
+        .select('id')
+        .eq('name', building)
+        .single();
+      if (hotelError) {
+        alert('Error finding hotel: ' + hotelError.message);
+        return;
+      }
+      hotelId = hotelData?.id;
     }
+
+    // 2. Build room query
+    let roomQuery = supabase
+      .from('rooms')
+      .select(`
+        id, room_number, hotel_id, room_type_id, is_active,
+        room_types (
+          id, name, max_occupancy
+        )
+      `)
+      .eq('is_active', true);
+
+    // Only filter by hotel_id if a specific building is selected
+    if (hotelId) {
+      roomQuery = roomQuery.eq('hotel_id', hotelId);
+    }
+
+    // 3. Filter by guest count (room_types.max_occupancy)
+    if (guests) {
+      roomQuery = roomQuery.gte('room_types.max_occupancy', guests);
+    }
+
+    // 4. Get all candidate rooms
+    const { data: rooms, error: roomError } = await roomQuery;
+    if (roomError) {
+      alert('Error fetching rooms: ' + roomError.message);
+      return;
+    }
+    if (!rooms || rooms.length === 0) {
+      alert('No rooms found matching your criteria.');
+      return;
+    }
+
+    // 5. Filter out rooms with overlapping reservations or blockout dates
+    const availableRooms = [];
+    console.log('Found rooms:', rooms);
+    for (const room of rooms) {
+      // Fetch all reservations for this room
+      const { data: reservations, error: resError } = await supabase
+        .from('reservations')
+        .select('check_in_date, check_out_date')
+        .eq('room_id', room.id);
+
+      if (resError) continue;
+
+      // Check for overlap in JS
+      const hasOverlap = reservations?.some(res =>
+        new Date(res.check_in_date) < new Date(departure) &&
+        new Date(res.check_out_date) > new Date(arrival)
+      );
+      if (hasOverlap) continue;
+
+      // Check for blockout dates
+      const { data: blockouts, error: blockError } = await supabase
+        .from('room_blockout_dates')
+        .select('block_date')
+        .eq('room_id', room.id)
+        .gte('block_date', arrival)
+        .lt('block_date', departure);
+
+      if (blockError) continue;
+      if (blockouts && blockouts.length > 0) continue;
+
+      availableRooms.push(room);
+    }
+
+    // Show results (for demo, just alert)
+    if (availableRooms.length === 0) {
+      alert('No available rooms for the selected dates and criteria.');
+      // Optionally, you can still navigate and show an empty list
+      navigate("/rooms", { state: { rooms: [] } });
+    } else {
+      // Pass the availableRooms to the /rooms page
+      navigate("/rooms", { state: { rooms: availableRooms } });
+    }
+
   };
 
   return (
@@ -141,10 +154,10 @@ function SearchBar({ onSearch }) {
             value={building}
             onChange={e => setBuilding(e.target.value)}
           >
-            <option value="">Select building</option>
-            <option value="Amara">Amara Building</option>
-            <option value="Bonita">Bonita Building</option>
-            <option value="Cordova">Cordova Building</option>
+            <option value="*">All Building</option>
+            <option value="Amara Hotel">Amara</option>
+            <option value="Bonita Hotel">Bonita</option>
+            <option value="Cordova Hotel">Cordova</option>
           </select>
         </div>
         <div className="col-md-2">
@@ -152,9 +165,22 @@ function SearchBar({ onSearch }) {
           <input
             type="number"
             min="1"
+            step="1"
             className="form-control"
             value={guests}
-            onChange={e => setGuests(Number(e.target.value))}
+            onChange={e => {
+              // Prevent decimals
+              const val = e.target.value;
+              if (/^\d*$/.test(val)) {
+                setGuests(Number(val));
+              }
+            }}
+            onWheel={e => e.target.blur()}
+            onKeyDown={e => {
+              if (e.key === '.' || e.key === 'e') {
+                e.preventDefault();
+              }
+            }}
           />
         </div>
         <div className="col-md-2">

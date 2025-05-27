@@ -1,0 +1,47 @@
+/*
+ * Database Schema Description for Hotel Room Booking System (PostgreSQL/Supabase)
+ *
+ * This schema is designed to manage hotel properties, room inventory, guest reservations,
+ * and specific dates when individual rooms are intentionally blocked out (e.g., for maintenance).
+ *
+ * Tables and their primary responsibilities:
+ *
+ * 1.  `hotels`
+ * - Purpose: Stores information about each hotel property (e.g., Amara Hotel, Bonita Hotel).
+ * - Primary Key: `id` (UUID)
+ * - Key Columns: `name` (unique), `address`, `description`
+ *
+ * 2.  `room_types`
+ * - Purpose: Defines categories of rooms available at each hotel (e.g., 'Oceanfront King', 'Deluxe Double Queen').
+ * This allows for consistent pricing, occupancy, and amenities across similar rooms.
+ * - Primary Key: `id` (UUID)
+ * - Foreign Key: `hotel_id` (links to `hotels.id`)
+ * - Key Columns: `name` (unique per hotel), `base_price_per_night`, `max_occupancy`, `amenities`
+ *
+ * 3.  `rooms`
+ * - Purpose: Represents each individual, physical room within a hotel (e.g., 'Room 101', 'Suite A').
+ * - Primary Key: `id` (UUID)
+ * - Foreign Keys: `hotel_id` (links to `hotels.id`), `room_type_id` (links to `room_types.id`)
+ * - Key Columns: `room_number` (unique per hotel), `is_active` (boolean for availability status)
+ *
+ * 4.  `reservations`
+ * - Purpose: Records actual guest bookings for specific rooms.
+ * - Primary Key: `id` (UUID)
+ * - Foreign Keys: `room_id` (links to `rooms.id`), `user_id` (optional, links to `auth.users.id` if using Supabase Auth)
+ * - Key Columns: `check_in_date`, `check_out_date` (exclusive), `total_price`, `num_guests`, `status` (e.g., 'confirmed', 'pending', 'cancelled')
+ * - Constraint: `check_out_date` must be after `check_in_date`.
+ *
+ * 5.  `room_blockout_dates`
+ * - Purpose: Manages specific dates when an individual room is unavailable for booking due to reasons
+ * other than a guest reservation (e.g., maintenance, owner use, renovation).
+ * - Primary Key: `id` (UUID)
+ * - Foreign Key: `room_id` (links to `rooms.id`)
+ * - Key Columns: `block_date` (the specific date the room is blocked)
+ * - Unique Constraint: Ensures a room cannot have more than one blockout entry for the same `block_date`.
+ *
+ * Availability Logic:
+ * A room is considered available for a given date range if:
+ * - It is `is_active = TRUE`.
+ * - There are no overlapping entries in the `reservations` table for that `room_id` and date range.
+ * - There are no matching `block_date` entries in the `room_blockout_dates` table for that `room_id` within the desired date range.
+ */
