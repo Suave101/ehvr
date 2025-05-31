@@ -1,4 +1,4 @@
-# Ocean Island Beach Resorts
+# Emerald Horizon Resorts
 
 ### [Click Here to visit the live preview](https://ehvr.vercel.app/)
 
